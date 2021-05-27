@@ -7,6 +7,6 @@ Instructions currently implemented:
 3. DXYN
 4. 1NNN
 
-Build with `make` and run with `palmotto` *chip8 rom*
+Build with `make` and run with `palmotto <chip8 rom>`
 
 Install ncurses to use this program.
