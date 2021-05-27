@@ -95,7 +95,7 @@ void cicle(VM *state)
         state->PC = (opcode & 0x0FFF) - OFFSET;
         break;
     default:
-        printf("Invalid instruction: %x", state->RAM[state->PC] >> 4);
+        printf("Invalid instruction: %x", instruction);
         exit(-1);
         break;
     }
