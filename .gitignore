@@ -1,2 +1,5 @@
 .vscode/
 build/
+
+#I use this rom for local testing
+tests/TEST 
