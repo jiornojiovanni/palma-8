@@ -34,11 +34,11 @@ VM initState()
 
 void cicle(VM *state)
 {
-    unsigned char instruction;
+    unsigned char instruction, nextInstruction, height;
     unsigned short opcode;
-    unsigned char height;
     instruction = state->RAM[state->PC + OFFSET];
-    opcode = (state->RAM[state->PC + OFFSET] << 8) | state->RAM[state->PC + OFFSET + 1];
+    nextInstruction = state->RAM[state->PC + OFFSET + 1];
+    opcode = (instruction << 8) | nextInstruction ;
 
     switch (instruction >> 4)
     {
