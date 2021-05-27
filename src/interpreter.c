@@ -58,9 +58,8 @@ void cicle(VM *state)
         }
         break;
 
-    case 0x0A: //ANNN Sets I to the address NNN.
-        state->I = opcode & 0x0FFF;
-        state->PC += 2;
+    case 0x01: //1NNN Jumps to address NNN.
+        state->PC = (opcode & 0x0FFF) - OFFSET;
         break;
 
     case 0x06: //6XNN Sets VX to NN.
@@ -109,6 +108,11 @@ void cicle(VM *state)
         }
         break;
 
+    case 0x0A: //ANNN Sets I to the address NNN.
+        state->I = opcode & 0x0FFF;
+        state->PC += 2;
+        break;
+
     case 0x0D: //DXYN Draws a sprite at coordinate (VX, VY) with height N.
         height = opcode & 0x000F;
         int collisionDetected = 0;
@@ -142,10 +146,6 @@ void cicle(VM *state)
         state->V[0xF] = collisionDetected ? 1 : 0;
 
         state->PC += 2;
-        break;
-
-    case 0x01: //1NNN Jumps to address NNN.
-        state->PC = (opcode & 0x0FFF) - OFFSET;
         break;
 
     default:
