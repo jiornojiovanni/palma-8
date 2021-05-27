@@ -120,7 +120,8 @@ void cicle(VM *state)
         {
             char row = state->RAM[state->I + i] >> 4;
 
-            //We check each row bit to bit, from left to right. (for example a row with value 1111 we shift initially 3 bit so we get 1 then 2 bit then 1. ).
+            //We check each row bit to bit, from left to right. 
+            //(for example a row with value 1111 we shift initially 3 bit so we get 1 then 2 bit then 1. ).
             int bit = 3, j = 0;
             do
             {
