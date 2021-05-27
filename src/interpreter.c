@@ -38,7 +38,7 @@ void cicle(VM *state)
     unsigned short opcode;
     instruction = state->RAM[state->PC + OFFSET];
     nextInstruction = state->RAM[state->PC + OFFSET + 1];
-    opcode = (instruction << 8) | nextInstruction ;
+    opcode = (instruction << 8) | nextInstruction;
 
     switch (instruction >> 4)
     {
@@ -72,7 +72,7 @@ void cicle(VM *state)
                     }
                     else
                     {
-                    state->video[state->V[vX] + i][state->V[vY] + j] = '*';
+                        state->video[state->V[vX] + i][state->V[vY] + j] = '*';
                     }
                 }
                 j++;
