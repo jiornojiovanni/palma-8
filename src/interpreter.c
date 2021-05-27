@@ -139,14 +139,7 @@ void cicle(VM *state)
             } while (bit > -1);
         }
 
-        if (collisionDetected)
-        {
-            state->V[0xF] = 1;
-        }
-        else
-        {
-            state->V[0xF] = 0;
-        }
+        state->V[0xF] = collisionDetected ? 1 : 0;
 
         state->PC += 2;
         break;
