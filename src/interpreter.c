@@ -57,14 +57,58 @@ void cicle(VM *state)
             break;
         }
         break;
+
     case 0x0A: //ANNN Sets I to the address NNN.
         state->I = opcode & 0x0FFF;
         state->PC += 2;
         break;
+
     case 0x06: //6XNN Sets VX to NN.
         state->V[instruction & 0x0F] = opcode & 0x00FF;
         state->PC += 2;
         break;
+
+    case 0x07: //7XNN Add NN to Vx (without carry flag change).
+        state->V[instruction & 0x0F] += opcode & 0x00FF;
+        state->PC += 2;
+        break;
+
+    case 0x08:
+        switch (nextInstruction & 0x0F)
+        {
+        case 0x00: //8XY0 Sets VX to the value of VY.
+            state->V[instruction & 0x0F] = state->V[nextInstruction >> 4];
+            state->PC += 2;
+            break;
+
+        case 0x01: //8XY1 Sets VX to VX or VY.
+            state->V[instruction & 0x0F] = state->V[instruction & 0x0F] | state->V[nextInstruction >> 4];
+            state->PC += 2;
+            break;
+
+        case 0x02: //8XY2 Sets VX to VX and VY.
+            state->V[instruction & 0x0F] = state->V[instruction & 0x0F] & state->V[nextInstruction >> 4];
+            state->PC += 2;
+            break;
+
+        case 0x03: //8XY3 Sets VX to VX xor VY.
+            state->V[instruction & 0x0F] = state->V[instruction & 0x0F] ^ state->V[nextInstruction >> 4];
+            state->PC += 2;
+            break;
+
+        case 0x04: //8XY4 Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there is not.
+            state->V[instruction & 0x0F] += state->V[nextInstruction >> 4];
+            state->V[0xF] = state->V[instruction & 0x0F] + state->V[nextInstruction >> 4] > 255 ? 1 : 0;
+            state->PC += 2;
+            break;
+
+        default:
+            printf("Invalid instruction: %x", instruction);
+            exit(-1);
+            break;
+        }
+        break;
+
     case 0x0D: //DXYN Draws a sprite at coordinate (VX, VY) with height N.
         height = opcode & 0x000F;
         int collisionDetected = 0;
@@ -106,9 +150,11 @@ void cicle(VM *state)
 
         state->PC += 2;
         break;
+
     case 0x01: //1NNN Jumps to address NNN.
         state->PC = (opcode & 0x0FFF) - OFFSET;
         break;
+
     default:
         printf("Invalid instruction: %x", instruction);
         exit(-1);
