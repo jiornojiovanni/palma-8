@@ -68,7 +68,7 @@ void cicle(VM *state)
                 }
                 j++;
                 bit--;
-            } while (bit > 0);
+            } while (bit > -1);
         }
         state->PC += 2;
         break;
