@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include <string.h>
 #include <curses.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "interpreter.h"
 
 int main(int argc, char const *argv[])
@@ -30,20 +30,26 @@ int main(int argc, char const *argv[])
     fclose(fp);
     
     initscr();
+    start_color();
+    curs_set(FALSE);
+    init_pair(1, COLOR_WHITE, COLOR_WHITE);
+    attron(COLOR_PAIR(1));
 
     while (1)
     {
+        clear();
         cicle(&state);
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < ROWS; i++)
         {
-            for (int j = 0; j < 32; j++)
+            for (int j = 0; j < COLUMNS; j++)
             {
-                if (state.video[i][j] == '*')
+                if (state.video[i][j] == 1)
                 {
-                    mvaddch(i, j, '*');
+                    mvaddch(i, j, 1);
                 }
             }
         }
         refresh();
+        usleep(2000);
     }
 }

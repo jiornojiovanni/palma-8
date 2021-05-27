@@ -1,6 +1,7 @@
 #include "interpreter.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 VM initState()
 {
@@ -42,6 +43,20 @@ void cicle(VM *state)
 
     switch (instruction >> 4)
     {
+    case 0x00:
+        switch (nextInstruction)
+        {
+        case 0xE0: //00E0 Clears the screen.
+            memset(state->video, 0, 64 * 32);
+            state->PC += 2;
+            break;
+
+        default:
+            printf("Invalid instruction: %x", instruction);
+            exit(-1);
+            break;
+        }
+        break;
     case 0x0A: //ANNN Sets I to the address NNN.
         state->I = opcode & 0x0FFF;
         state->PC += 2;
@@ -50,14 +65,14 @@ void cicle(VM *state)
         state->V[instruction & 0x0F] = opcode & 0x00FF;
         state->PC += 2;
         break;
-    case 0x0D: //DXYN Draws a sprite at coordinate (VX, VY) with height N
+    case 0x0D: //DXYN Draws a sprite at coordinate (VX, VY) with height N.
         height = opcode & 0x000F;
         int collisionDetected = 0;
         for (int i = 0; i < height; i++)
         {
             char row = state->RAM[state->I + i] >> 4;
 
-            //We check each row bit to bit, from left to right. (for example a row with value 1111 we shift initially 3 bit so we get 1 then 2 bit then 1. )
+            //We check each row bit to bit, from left to right. (for example a row with value 1111 we shift initially 3 bit so we get 1 then 2 bit then 1. ).
             int bit = 3, j = 0;
             do
             {
@@ -65,14 +80,14 @@ void cicle(VM *state)
                 {
                     int vX = (opcode & 0x0F00) >> 8;
                     int vY = (opcode & 0x00F0) >> 4;
-                    if (state->video[state->V[vX] + i][state->V[vY] + j] == '*')
+                    if (state->video[state->V[vX] + i][state->V[vY] + j] == 1)
                     {
                         state->video[state->V[vX] + i][state->V[vY] + j] = 0;
                         collisionDetected = 1;
                     }
                     else
                     {
-                        state->video[state->V[vX] + i][state->V[vY] + j] = '*';
+                        state->video[state->V[vX] + i][state->V[vY] + j] = 1;
                     }
                 }
                 j++;

@@ -1,4 +1,6 @@
 #define OFFSET 512
+#define ROWS 64
+#define COLUMNS 32
 
 typedef struct
 {
