@@ -13,4 +13,5 @@ typedef struct
 } VM;
 
 VM initState();
+void halt(unsigned char instruction);
 void cicle(VM *state);

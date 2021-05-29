@@ -33,6 +33,12 @@ VM initState()
     return initialState;
 }
 
+void halt(unsigned char instruction)
+{
+    printf("Invalid instruction: %x", instruction);
+    exit(-1);
+}
+
 void cicle(VM *state)
 {
     unsigned char instruction, nextInstruction, height;
@@ -52,8 +58,7 @@ void cicle(VM *state)
             break;
 
         default:
-            printf("Invalid instruction: %x", instruction);
-            exit(-1);
+            halt(instruction);
             break;
         }
         break;
@@ -138,8 +143,7 @@ void cicle(VM *state)
             break;
 
         default:
-            printf("Invalid instruction: %x", instruction);
-            exit(-1);
+            halt(instruction);
             break;
         }
         break;
@@ -199,8 +203,7 @@ void cicle(VM *state)
         break;
 
     default:
-        printf("Invalid instruction: %x", instruction);
-        exit(-1);
+        halt(instruction);
         break;
     }
 }
