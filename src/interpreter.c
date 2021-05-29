@@ -58,7 +58,7 @@ void cicle(VM *state)
             break;
 
         default:
-            halt(instruction);
+            halt(nextInstruction);
             break;
         }
         break;
@@ -76,6 +76,7 @@ void cicle(VM *state)
         break;
 
     case 0x05: //5XY0 Skips the next instruction if VX equals VY.
+        if((nextInstruction & 0x0F) != 0) halt(nextInstruction);
         state->PC += state->V[instruction & 0x0F] == state->V[nextInstruction >> 4] ? 4 : 2;
         break;
 
@@ -143,12 +144,13 @@ void cicle(VM *state)
             break;
 
         default:
-            halt(instruction);
+            halt(nextInstruction);
             break;
         }
         break;
 
     case 0x09: //9XY0 Skips the next instruction if VX does not equal VY. (Usually the next instruction is a jump to skip a code block).
+        if((nextInstruction & 0x0F) != 0) halt(nextInstruction);
         state->PC += state->V[instruction & 0x0F] != state->V[nextInstruction >> 4] ? 4 : 2;
         break;
 
