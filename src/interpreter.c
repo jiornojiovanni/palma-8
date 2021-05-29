@@ -37,7 +37,6 @@ void cicle(VM *state)
 {
     unsigned char instruction, nextInstruction, height;
     unsigned short opcode;
-    int n;
     instruction = state->RAM[state->PC + OFFSET];
     nextInstruction = state->RAM[state->PC + OFFSET + 1];
     opcode = (instruction << 8) | nextInstruction;
