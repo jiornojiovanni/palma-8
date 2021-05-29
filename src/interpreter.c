@@ -101,6 +101,30 @@ void cicle(VM *state)
             state->PC += 2;
             break;
 
+        case 0x05: //8XY5 VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there is not.
+            state->V[0xF] = state->V[instruction & 0x0F] > state->V[nextInstruction >> 4] ? 1 : 0;
+            state->V[instruction & 0x0F] -= state->V[nextInstruction >> 4];
+            state->PC += 2;
+            break;
+
+        case 0x06: //8XY6 Stores the least significant bit of VX in VF and then shifts VX to the right by 1.
+            state->V[0xF] = state->V[instruction & 0x0F] & 1;
+            state->V[instruction & 0x0F] = state->V[instruction & 0x0F] >> 1;
+            state->PC += 2;
+            break;
+
+        case 0x07: //8XY7 Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there is not.
+            state->V[0xF] = state->V[nextInstruction >> 4] > state->V[instruction & 0x0F] ? 1 : 0;
+            state->V[nextInstruction >> 4] -= state->V[instruction & 0x0F];
+            state->PC += 2;
+            break;
+
+        case 0x0E: //8XYE Stores the most significant bit of VX in VF and then shifts VX to the left by 1.
+            state->V[0xF] = state->V[instruction & 0x0F] >> 3;
+            state->V[instruction & 0x0F] = state->V[instruction & 0x0F] << 1;
+            state->PC += 2;
+            break;
+
         default:
             printf("Invalid instruction: %x", instruction);
             exit(-1);
@@ -120,7 +144,7 @@ void cicle(VM *state)
         {
             char row = state->RAM[state->I + i] >> 4;
 
-            //We check each row bit to bit, from left to right. 
+            //We check each row bit to bit, from left to right.
             //(for example a row with value 1111 we shift initially 3 bit so we get 1 then 2 bit then 1. ).
             int bit = 3, j = 0;
             do

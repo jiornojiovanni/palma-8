@@ -10,6 +10,11 @@ Instructions currently implemented:
 - 8XY1
 - 8XY2
 - 8XY3
+- 8XY4
+- 8XY5
+- 8XY6
+- 8XY7
+- 8XYE
 - ANNN
 - DXYN
 
