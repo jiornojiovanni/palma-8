@@ -37,6 +37,7 @@ void cicle(VM *state)
 {
     unsigned char instruction, nextInstruction, height;
     unsigned short opcode;
+    int n;
     instruction = state->RAM[state->PC + OFFSET];
     nextInstruction = state->RAM[state->PC + OFFSET + 1];
     opcode = (instruction << 8) | nextInstruction;
@@ -134,6 +135,15 @@ void cicle(VM *state)
 
     case 0x0A: //ANNN Sets I to the address NNN.
         state->I = opcode & 0x0FFF;
+        state->PC += 2;
+        break;
+
+    case 0x0B: //BNNN Jumps to the address NNN plus V0.
+        state->PC = ((opcode & 0x0FFF) + state->V[0x00]) - OFFSET;
+        break;
+
+    case 0x0C: //CXNN Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.
+        state->V[instruction & 0x0F] = (rand() % 256) & nextInstruction;
         state->PC += 2;
         break;
 

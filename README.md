@@ -16,6 +16,8 @@ Instructions currently implemented:
 - 8XY7
 - 8XYE
 - ANNN
+- BNNN
+- CXNN
 - DXYN
 
 Build with `make` and run with `palmotto <chip8 rom>`
