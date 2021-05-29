@@ -62,6 +62,18 @@ void cicle(VM *state)
         state->PC = (opcode & 0x0FFF) - OFFSET;
         break;
 
+    case 0x03: //3XNN Skips the next instruction if VX equals NN. (Usually the next instruction is a jump to skip a code block).
+        state->PC += state->V[instruction & 0x0F] == nextInstruction ? 4 : 2;
+        break;
+
+    case 0x04: //4XNN Skips the next instruction if VX does not equal NN. (Usually the next instruction is a jump to skip a code block).
+        state->PC += state->V[instruction & 0x0F] != nextInstruction ? 4 : 2;
+        break;
+
+    case 0x05: //5XY0 Skips the next instruction if VX equals VY. (Usually the next instruction is a jump to skip a code block).
+        state->PC += state->V[instruction & 0x0F] == state->V[nextInstruction >> 4] ? 4 : 2;
+        break;
+
     case 0x06: //6XNN Sets VX to NN.
         state->V[instruction & 0x0F] = opcode & 0x00FF;
         state->PC += 2;
@@ -130,6 +142,10 @@ void cicle(VM *state)
             exit(-1);
             break;
         }
+        break;
+
+    case 0x09: //9XY0 Skips the next instruction if VX does not equal VY. (Usually the next instruction is a jump to skip a code block).
+        state->PC += state->V[instruction & 0x0F] != state->V[nextInstruction >> 4] ? 4 : 2;
         break;
 
     case 0x0A: //ANNN Sets I to the address NNN.

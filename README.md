@@ -4,6 +4,9 @@
 Instructions currently implemented:
 - 00E0
 - 1NNN
+- 3XNN
+- 4XNN
+- 5XY0
 - 6XNN
 - 7XNN
 - 8XY0
@@ -15,6 +18,7 @@ Instructions currently implemented:
 - 8XY6
 - 8XY7
 - 8XYE
+- 9XY0
 - ANNN
 - BNNN
 - CXNN
