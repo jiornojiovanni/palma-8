@@ -28,7 +28,8 @@ VM initState()
         0,
         0,
         {0},
-        {0},
+        {{0}, {0}},
+        
     };
     return initialState;
 }
