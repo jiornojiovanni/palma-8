@@ -9,7 +9,8 @@ typedef struct
     unsigned short PC;
     unsigned short I;
     unsigned char V[16];
-    char video[ROWS][COLUMNS];
+    unsigned short STACK[16];
+    unsigned char video[ROWS][COLUMNS];
 } VM;
 
 VM initState();

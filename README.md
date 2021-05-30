@@ -3,7 +3,9 @@
 
 Instructions currently implemented:
 - 00E0
+- 00EE
 - 1NNN
+- 2NNN
 - 3XNN
 - 4XNN
 - 5XY0

@@ -28,6 +28,7 @@ VM initState()
         0,
         0,
         {0},
+        {0},
         {{0}, {0}},
         
     };
@@ -58,6 +59,12 @@ void cicle(VM *state)
             state->PC += 2;
             break;
 
+        case 0xEE: //00EE Return from subroutine.
+            state->PC = state->STACK[state->SP];
+            state->SP--;
+            state->PC += 2;
+            break;
+            
         default:
             halt(nextInstruction);
             break;
@@ -65,6 +72,12 @@ void cicle(VM *state)
         break;
 
     case 0x01: //1NNN Jumps to address NNN.
+        state->PC = (opcode & 0x0FFF) - OFFSET;
+        break;
+
+    case 0x02: //2NNN Call the subroutine at NNN.
+        state->STACK[state->SP] = state->PC;
+        state->SP++;
         state->PC = (opcode & 0x0FFF) - OFFSET;
         break;
 
