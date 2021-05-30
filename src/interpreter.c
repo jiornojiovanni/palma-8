@@ -185,14 +185,16 @@ void cicle(VM *state)
                 {
                     int vX = (opcode & 0x0F00) >> 8;
                     int vY = (opcode & 0x00F0) >> 4;
-                    if (state->video[state->V[vX] + i][state->V[vY] + j] == 1)
+                    unsigned char y = (state->V[vY] + i) % (ROWS - 1);
+                    unsigned char x = (state->V[vX] + j) % (COLUMNS - 1);
+                    if (state->video[y][x] == 1)
                     {
-                        state->video[state->V[vX] + i][state->V[vY] + j] = 0;
+                        state->video[y][x] = 0;
                         collisionDetected = 1;
                     }
                     else
                     {
-                        state->video[state->V[vX] + i][state->V[vY] + j] = 1;
+                        state->video[y][x] = 1;
                     }
                 }
                 j++;

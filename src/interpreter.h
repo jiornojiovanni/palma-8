@@ -1,6 +1,6 @@
 #define OFFSET 512
-#define ROWS 64
-#define COLUMNS 32
+#define ROWS 32
+#define COLUMNS 64
 
 typedef struct
 {
@@ -9,7 +9,7 @@ typedef struct
     unsigned short PC;
     unsigned short I;
     unsigned char V[16];
-    char video[64][32];
+    char video[ROWS][COLUMNS];
 } VM;
 
 VM initState();
