@@ -11,8 +11,11 @@ typedef struct
     unsigned char V[16];
     unsigned short STACK[16];
     unsigned char video[ROWS][COLUMNS];
+    unsigned char KB[16];
+    unsigned char KBinterrupt;
+    unsigned KBrequest;
 } VM;
 
 VM initState();
-void halt(unsigned char instruction);
+void halt(unsigned short instruction);
 void cicle(VM *state);

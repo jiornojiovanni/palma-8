@@ -25,6 +25,15 @@ Instructions currently implemented:
 - BNNN
 - CXNN
 - DXYN
+- EX9E
+- EXA1
+- FX07
+- FX0A
+- FX1E
+- FX29
+- FX33
+- FX55
+- FX65
 
 Build with `make` and run with `palmotto <chip8 rom>`
 

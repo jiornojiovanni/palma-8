@@ -1,6 +1,6 @@
 CC=gcc
 CCFLAGS= -Wextra -Wall
-LDFLAGS=-lncurses
+LDFLAGS=-lSDL2
 DIRS=build
 SRC=src
 palmotto: $(SRC)/palmotto.c $(SRC)/interpreter.c

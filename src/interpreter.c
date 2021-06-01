@@ -30,12 +30,13 @@ VM initState()
         {0},
         {0},
         {{0}, {0}},
-        
-    };
+        {0},
+        0,
+        0};
     return initialState;
 }
 
-void halt(unsigned char instruction)
+void halt(unsigned short instruction)
 {
     printf("Invalid instruction: %x", instruction);
     exit(-1);
@@ -64,9 +65,9 @@ void cicle(VM *state)
             state->SP--;
             state->PC += 2;
             break;
-            
+
         default:
-            halt(nextOpcode);
+            halt(instruction);
             break;
         }
         break;
@@ -90,7 +91,8 @@ void cicle(VM *state)
         break;
 
     case 0x05: //5XY0 Skips the next instruction if VX equals VY.
-        if((nextOpcode & 0x0F) != 0) halt(nextOpcode);
+        if ((nextOpcode & 0x0F) != 0)
+            halt(instruction);
         state->PC += state->V[opcode & 0x0F] == state->V[nextOpcode >> 4] ? 4 : 2;
         break;
 
@@ -158,13 +160,14 @@ void cicle(VM *state)
             break;
 
         default:
-            halt(nextOpcode);
+            halt(instruction);
             break;
         }
         break;
 
     case 0x09: //9XY0 Skips the next instruction if VX does not equal VY. (Usually the next instruction is a jump to skip a code block).
-        if((nextOpcode & 0x0F) != 0) halt(nextOpcode);
+        if ((nextOpcode & 0x0F) != 0)
+            halt(instruction);
         state->PC += state->V[opcode & 0x0F] != state->V[nextOpcode >> 4] ? 4 : 2;
         break;
 
@@ -220,8 +223,85 @@ void cicle(VM *state)
         state->PC += 2;
         break;
 
+    case 0x0E:
+        switch (nextOpcode)
+        {
+        case 0x9E: //EX9E Skips the next instruction if the key stored in VX is pressed.
+            state->PC += state->KB[state->V[opcode & 0x0F]] == 0xFF ? 4 : 2;
+            break;
+
+        case 0xA1: //EXA1 Skips the next instruction if the key stored in VX is not pressed.
+            state->PC += state->KB[state->V[opcode & 0x0F]] != 0xFF ? 4 : 2;
+            break;
+
+        default:
+            break;
+        }
+        break;
+
+    case 0x0F:
+        switch (nextOpcode)
+        {
+        case 0x0A: //FX0A A key press is awaited, and then stored in VX.
+            switch (state->KBinterrupt) //signal 0-> we interrupt the machine, signal 1 -> we received input
+            {
+            case 0:
+                state->KBinterrupt = 1;
+                state->KBrequest = opcode & 0x0F;
+                break;
+
+            case 1:
+                state->KBinterrupt = 0;
+                state->PC += 2;
+                break;
+            }
+            break;  
+
+        case 0x18: //FX18 Sets the sound timer to VX. UNIMPLEMENTED
+            state->PC += 2;
+            break;
+            
+        case 0x1E: //FX1E Adds VX to I. VF is not affected.
+            state->I += state->V[opcode & 0x0F];
+            state->PC += 2;
+            break;
+
+        case 0x29: //FX29 Sets I to the location of the sprite for the character in VX.
+            state->I = (opcode & 0x0F) * 5;
+            state->PC += 2;
+            break;
+
+        case 0x33: //FX33 Stores the binary-coded decimal representation of VX.
+            state->RAM[state->I] = state->V[opcode & 0x0F] / 100;
+            state->RAM[state->I + 1] = (state->V[opcode & 0x0F] % 100) / 10;
+            state->RAM[state->I + 2] = state->V[opcode & 0x0F] % 10;
+            state->PC += 2;
+            break;
+
+        case 0x55: //FX55 Stores V0 to VX (including VX) in memory starting at address I. 
+            for (int i = 0; i <= (opcode & 0x0F); i++)
+            {
+                state->RAM[state->I + i] = state->V[i];
+            }
+            state->PC += 2;
+            break;
+
+        case 0x65: //FX65 Fills V0 to VX (including VX) with values from memory starting at address I.
+            for (int i = 0; i <= (opcode & 0x0F); i++)
+            {
+                state->V[i] = state->RAM[state->I + i];
+            }
+            state->PC += 2;
+            break;
+
+        default:
+            halt(instruction);
+            break;
+        }
+        break;
+
     default:
-        halt(opcode);
+        halt(instruction);
         break;
     }
 }
