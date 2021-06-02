@@ -2,4 +2,4 @@
 build/
 
 #I use this rom for local testing
-tests/TEST.bin
+*.bin
