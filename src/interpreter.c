@@ -77,8 +77,8 @@ void cicle(VM *state)
         break;
 
     case 0x02: //2NNN Call the subroutine at NNN.
-        state->STACK[state->SP] = state->PC;
         state->SP++;
+        state->STACK[state->SP] = state->PC;
         state->PC = (instruction & 0x0FFF) - OFFSET;
         break;
 
@@ -201,8 +201,8 @@ void cicle(VM *state)
                 {
                     int vX = (instruction & 0x0F00) >> 8;
                     int vY = (instruction & 0x00F0) >> 4;
-                    unsigned char y = (state->V[vY] + i) % (ROWS - 1);
-                    unsigned char x = (state->V[vX] + j) % (COLUMNS - 1);
+                    unsigned char y = (state->V[vY] + i) % (ROWS);
+                    unsigned char x = (state->V[vX] + j) % (COLUMNS);
                     if (state->video[y][x] == 1)
                     {
                         state->video[y][x] = 0;
