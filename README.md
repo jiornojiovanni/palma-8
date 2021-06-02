@@ -1,4 +1,4 @@
-# palma-8 (Chip-8 C implementation with ncurses frontend)
+# palma-8 (Chip-8 C implementation with sdl2 frontend)
 
 
 Instructions currently implemented:
@@ -37,4 +37,4 @@ Instructions currently implemented:
 
 Build with `make` and run with `palmotto <chip8 rom>`
 
-Install ncurses to use this program.
+Install sdl2 to use this program.
