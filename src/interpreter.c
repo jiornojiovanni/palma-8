@@ -252,6 +252,7 @@ void cicle(VM *state)
 
             case 1:
                 state->KBinterrupt = 0;
+                state->KBrequest = 0;
                 state->PC += 2;
                 break;
             }

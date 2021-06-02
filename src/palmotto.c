@@ -45,33 +45,41 @@ int main(int argc, char const *argv[])
     {
         if (state.KBinterrupt)
         {
-            SDL_WaitEvent(&e);
-
-            if (e.type == SDL_QUIT)
+            do
             {
-                quit = true;
-            }
 
-            for (int i = 0; i < KBSIZE; i++)
-            {
-                if (e.key.keysym.sym == KEYBOARD[i])
+                SDL_WaitEvent(&e);
+                if (e.type == SDL_QUIT)
                 {
-                    state.KB[i] = 0xFF;
-                    state.V[state.KBrequest] = e.key.keysym.sym;
-                    break;
+                    quit = true;
                 }
-            }
 
-            if (e.type == SDL_KEYUP)
-            {
-                for (int i = 0; i < KBSIZE; i++)
+                if (e.type == SDL_KEYDOWN)
                 {
-                    if (e.key.keysym.sym == KEYBOARD[i])
+                    for (int i = 0; i < KBSIZE; i++)
                     {
-                        state.KB[i] = 0x00;
+                        if (e.key.keysym.sym == KEYBOARD[i])
+                        {
+                            state.KB[i] = 0xFF;
+                            state.V[state.KBrequest] = i;
+                            break;
+                        }
                     }
                 }
-            }
+
+                if (e.type == SDL_KEYUP)
+                {
+                    for (int i = 0; i < KBSIZE; i++)
+                    {
+                        if (e.key.keysym.sym == KEYBOARD[i])
+                        {
+                            state.KB[i] = 0x00;
+                            break;
+                        }
+                    }
+                }
+
+            } while (e.type != SDL_QUIT && e.type != SDL_KEYDOWN);
         }
         else
         {
@@ -119,7 +127,7 @@ int main(int argc, char const *argv[])
             }
         }
         SDL_RenderPresent(gRenderer);
-        SDL_Delay(1);
+        SDL_Delay(2);
     }
 
     SDL_DestroyRenderer(gRenderer);
