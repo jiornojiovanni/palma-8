@@ -35,10 +35,24 @@ int main(int argc, char const *argv[])
     fread(state.RAM + OFFSET, sizeof(state.RAM), 1, fp);
     fclose(fp);
 
-    SDL_Init(SDL_INIT_VIDEO);
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        return -1;
+    }
     SDL_Window *gWindow = SDL_CreateWindow("PALMOTTO", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 320, SDL_WINDOW_SHOWN);
+    if (gWindow == NULL)
+    {
+        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        return -1;
+    }
+
     SDL_Renderer *gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-    SDL_RenderSetLogicalSize(gRenderer, COLUMNS, ROWS);
+    if(SDL_RenderSetLogicalSize(gRenderer, COLUMNS, ROWS) < 0)
+    {
+        printf("SDL could not set the logical size! SDL_Error: %s\n", SDL_GetError());
+        return -1;
+    }
 
     bool quit = false;
     SDL_Event e;
