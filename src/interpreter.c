@@ -270,7 +270,7 @@ void cicle(VM *state)
             state->PC += 2;
             break;
 
-        case 0x18: //FX18 Sets the sound timer to VX. UNIMPLEMENTED
+        case 0x18: //FX18 Sets the sound timer to VX.
             state->ST = state->V[opcode & 0x0F] & 0x0F;
             state->PC += 2;
             break;

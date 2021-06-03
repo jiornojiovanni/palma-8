@@ -17,7 +17,6 @@ int main(int argc, char const *argv[])
     char KEYBOARD[KBSIZE] = {'1', '2', '3', '4', 'q', 'w', 'e', 'r', 'a', 's', 'd', 'f', 'z', 'x', 'c', 'v'};
     clock_t before = clock();
 
-
     if (argc > 1)
     {
         fp = fopen(argv[1], "rb");
@@ -114,16 +113,22 @@ int main(int argc, char const *argv[])
             }
         }
 
-        if (state.DT != 0)
+        clock_t now = clock();
+        clock_t difference = now - before;
+        if (difference > ((1 / FREQUENCY) * 1000))
         {
-            clock_t now = clock();
-            clock_t difference = now - before;
-            if (difference > ((1 / FREQUENCY) * 1000))
+
+            if (state.DT != 0)
             {
                 state.DT--;
             }
-            before = now;   
+            if (state.ST != 0)
+            {
+                SDL_Log("BEEEEEEP \n");
+                state.ST--;
+            }
         }
+        before = now;
 
         SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
         SDL_RenderClear(gRenderer);
