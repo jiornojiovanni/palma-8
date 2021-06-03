@@ -236,6 +236,7 @@ void cicle(VM *state)
             break;
 
         default:
+            halt(instruction);
             break;
         }
         break;
