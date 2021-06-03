@@ -3,17 +3,20 @@
 #include <string.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include <time.h>
 #include "interpreter.h"
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 320
 #define KBSIZE 16
-
+#define FREQUENCY 60
 int main(int argc, char const *argv[])
 {
 
     FILE *fp;
     VM state = initState();
     char KEYBOARD[KBSIZE] = {'1', '2', '3', '4', 'q', 'w', 'e', 'r', 'a', 's', 'd', 'f', 'z', 'x', 'c', 'v'};
+    clock_t before = clock();
+
 
     if (argc > 1)
     {
@@ -109,6 +112,17 @@ int main(int argc, char const *argv[])
                     }
                 }
             }
+        }
+
+        if (state.DT != 0)
+        {
+            clock_t now = clock();
+            clock_t difference = now - before;
+            if (difference > ((1 / FREQUENCY) * 1000))
+            {
+                state.DT--;
+            }
+            before = now;   
         }
 
         SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);

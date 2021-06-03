@@ -13,7 +13,9 @@ typedef struct
     unsigned char video[ROWS][COLUMNS];
     unsigned char KB[16];
     unsigned char KBinterrupt;
-    unsigned KBrequest;
+    unsigned char KBrequest;
+    unsigned char DT;
+    unsigned char ST;
 } VM;
 
 VM initState();

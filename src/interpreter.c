@@ -32,6 +32,8 @@ VM initState()
         {{0}, {0}},
         {0},
         0,
+        0,
+        0,
         0};
     return initialState;
 }
@@ -203,15 +205,14 @@ void cicle(VM *state)
                     int vY = (instruction & 0x00F0) >> 4;
                     unsigned char y = (state->V[vY] + i) % (ROWS);
                     unsigned char x = (state->V[vX] + j) % (COLUMNS);
-                    if (state->video[y][x] == 1)
+
+                    if (state->video[y][x])
                     {
-                        state->video[y][x] = 0;
                         collisionDetected = 1;
                     }
-                    else
-                    {
-                        state->video[y][x] = 1;
-                    }
+                    state->video[y][x] = state->video[y][x] ^ 1;
+
+                    
                 }
                 j++;
                 bit--;
@@ -242,6 +243,12 @@ void cicle(VM *state)
     case 0x0F:
         switch (nextOpcode)
         {
+
+        case 0x07:
+            state->V[opcode & 0x0F] = state->DT;
+            state->PC += 2;
+            break;
+
         case 0x0A: //FX0A A key press is awaited, and then stored in VX.
             switch (state->KBinterrupt) //signal 0-> we interrupt the machine, signal 1 -> we received input
             {
@@ -258,7 +265,13 @@ void cicle(VM *state)
             }
             break;  
 
+        case 0x15: //FX18 Sets the delay timer to VX.
+            state->DT = state->V[opcode & 0x0F] & 0x0F;
+            state->PC += 2;
+            break;
+
         case 0x18: //FX18 Sets the sound timer to VX. UNIMPLEMENTED
+            state->ST = state->V[opcode & 0x0F] & 0x0F;
             state->PC += 2;
             break;
             
@@ -268,7 +281,7 @@ void cicle(VM *state)
             break;
 
         case 0x29: //FX29 Sets I to the location of the sprite for the character in VX.
-            state->I = (opcode & 0x0F) * 5;
+            state->I = (state->V[opcode & 0x0F] & 0x0F) * 5;
             state->PC += 2;
             break;
 
